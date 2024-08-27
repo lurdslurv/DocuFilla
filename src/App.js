@@ -1,10 +1,13 @@
 import React from 'react';
-import FileUpload from './components/FileUpload';
+import Dashboard from './components/Dashboard';
 
 const App = () => {
   return (
     <div className="App">
-      <FileUpload />
+      <Dashboard />
+      <div className="credits">
+        <a href='https://github.com/lurdslurv'>I'm Lurv</a>
+      </div>
     </div>
   );
 };
