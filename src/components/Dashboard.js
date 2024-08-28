@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
-import { Avatar, Box, Typography, TextField, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Divider, Grid, Paper } from '@mui/material';
+import { Avatar, Box, Typography, TextField, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Divider, Grid, Paper, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileUpload from './FileUpload';
 
 const Dashboard = () => {
   const [documents, setDocuments] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedText, setSelectedText] = useState('');
+  const [open, setOpen] = useState(false);
 
   const handleUpload = (document) => {
     setDocuments([...documents, document]);
+  };
+
+  const handleClickOpen = (text) => {
+    setSelectedText(text);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedText('');
   };
 
   const handleDelete = (index) => {
@@ -58,10 +70,18 @@ const Dashboard = () => {
                             <Typography component="span" variant="body2"><strong>Category:</strong> {doc.category}</Typography><br />
                             <Typography component="span" variant="body2"><strong>Tags:</strong> {doc.tags.join(', ')}</Typography><br />
                             <Typography component="span" variant="body2"><strong>Text:</strong> {doc.text.substring(0, 100)}...</Typography>
+                            <Button
+                              variant="text"
+                              color="primary"
+                              onClick={() => handleClickOpen(doc.text)}
+                              sx={{ textTransform: 'none', marginLeft: 0, paddingLeft: 0 }}
+                            >
+                              View Full Text
+                            </Button>
                           </>
                         }
                       />
-                      <img src={".\logo.svg"} alt={doc.title} style={{ width: 100, height: 100, marginLeft: 20, borderRadius: 8, objectFit: 'cover' }} />
+                      <img src={doc.fileUrl} alt={doc.title} style={{ width: 100, height: 100, marginLeft: 20, borderRadius: 8, objectFit: 'cover' }} />
                       <ListItemSecondaryAction>
                         <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(index)}>
                           <DeleteIcon sx={{ color: 'darkblue' }} />
@@ -76,6 +96,15 @@ const Dashboard = () => {
           </Paper>
         </Grid>
       </Grid>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Extracted Text</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+            {selectedText}
+          </Typography>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
